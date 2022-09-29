@@ -23,6 +23,7 @@
         </div>
         <div class="py-2">
             <button class="rounded px-4 py-2 text-white hover:text-gray-200 bg-green-500 hover:bg-green-600" onclick="addItem()">Add Item</button>
+            <button class="rounded px-4 py-2 text-white hover:text-gray-200 bg-cyan-500 hover:bg-cyan-600" onclick="calculate()">Calculate</button>
             <button class="rounded px-4 py-2 text-white hover:text-gray-200 bg-red-500 hover:bg-red-700" onclick="deleteAllItems()">Reset</button>
         </div>
         <div id="items">
@@ -46,7 +47,7 @@
                         <td class="font-bold">TOTAL</td>
                         <td></td>
                         <td></td>
-                        <td><div class="w-1/5 max-w-xs min-w-fit">
+                        <td><div class="w-1/5 max-w-xs">
                             <div class="relative mt-1 rounded-md shadow-sm">
                               <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                 <span class="text-gray-500 sm:text-sm">Rp</span>
@@ -55,7 +56,7 @@
                             </div>
                         </div>
                         <td></td>
-                        <td><div class="w-1/5 max-w-xs min-w-fit">
+                        <td><div class="w-1/5 max-w-xs">
                             <div class="relative mt-1 rounded-md shadow-sm">
                               <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                 <span class="text-gray-500 sm:text-sm">Rp</span>
@@ -99,7 +100,7 @@
             value: 0,
             class: "totalPrices",
             index: idx,
-            isReadOnly: true
+            onChange: `calculateLineByTotal(${idx})`
         }
         let upAfterDsc = {
             id: `upAfterDsc${idx}`,
@@ -115,6 +116,7 @@
             index: idx,
             isReadOnly: true
         }
+
         let item = ` <tr id="item${idx}">
                         <td><i class="fa-solid fa-trash" onclick="deleteItem(this)"></i></td>
                         <td>${inputText(name)}</td>
@@ -149,6 +151,14 @@
         calculate();
     }
 
+    function calculateLineByTotal(idx) {
+        let totalPrice = getTotalUnitPrice(idx);
+        let qty = getQuantity(idx);
+        
+        setUnitPrice(idx, pricePerQuantity(totalPrice, qty));
+        calculate();
+    }
+
     function calculate(){
         let calculatedAllPrice = calculateTotalPrice();
         setTotalAllPrice(calculatedAllPrice);
@@ -159,6 +169,10 @@
 
     function priceWithQuantity(price, quantity){
         return price * quantity;
+    }
+
+    function pricePerQuantity(price, quantity){
+        return price / quantity
     }
 
     function calculateTotalPrice() {
@@ -188,12 +202,24 @@
         return document.querySelector(`#qty${idx}`).value;
     }
 
+    function getUnitPrice(idx){
+        return document.querySelector(`#up${idx}`).value;
+    }
+
+    function setUnitPrice(idx, price){
+        document.querySelector(`#up${idx}`).value = price;
+    }
+
     function getAllTotalPrice(){
         return document.querySelector('#totalPrice').value;
     }
 
     function setTotalAllPrice(price){
         document.querySelector('#totalPrice').value = price;
+    }
+
+    function getTotalUnitPrice(idx) {
+        return document.querySelector(`#totalPrice${idx}`).value
     }
 
     function setTotalPrice(idx, price, qty){
@@ -225,7 +251,7 @@
     }
 
     function inputPrice(params){
-        return `<div class="relative mt-1 max-w-xs min-w-fit rounded-md shadow-sm">
+        return `<div class="relative mt-1 max-w-xs rounded-md shadow-sm">
                     <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                         <span class="text-gray-500 sm:text-sm">Rp</span>
                     </div>
@@ -244,7 +270,7 @@
     }
 
     function inputNumber(params){
-        return `<div class="relative mt-1 max-w-xs min-w-fit rounded-md shadow-sm">
+        return `<div class="relative mt-1 max-w-xs rounded-md shadow-sm">
                     <input ${params.id ? 'id="'+params.id+'"' : ''} 
                             type="number" 
                             min="0"
@@ -260,7 +286,7 @@
     }
 
     function inputText(params){
-        return `<div class="relative mt-1 max-w-xs min-w-fit rounded-md shadow-sm">
+        return `<div class="relative mt-1 max-w-xs rounded-md shadow-sm">
                     <input ${params.id ? 'id="'+params.id+'"' : ''} 
                             type="text" 
                             class="${params.class ? params.class : ''} rounded-md border-gray-300 pl-2 pr-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" 
