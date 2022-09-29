@@ -1,0 +1,38 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.table-items {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table-items tbody td, .table-items th {
+    padding: 8px;
+}
+
+.table-items tfoot td {
+    padding: 8px;
+}
+.table-items tr:nth-child(even){background-color: #f2f2f2;}
+
+.table-items tr:hover {background-color: rgb(220 252 231);}
+
+.table-items th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #04AA6D;
+    color: white;
+}
+
+.fa-trash{
+    color: red;
+    cursor: pointer;
+}
+
+.input-price {
+    text-align: right;
+}

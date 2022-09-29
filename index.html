@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Bill Calculator</title>
+</head>
+<body>
+    <div class="lg:container mx-auto px-4">
+        <h2 class="font-bold text-5xl text-white bg-green-600 py-2 px-5">BILL CALCULATOR</h2>
+        <div class="w-1/5 max-w-xs min-w-fit">
+            <label for="price" class="text-sm font-bold text-gray-700">Total Pay WITH Discount/Tax</label>
+            <div class="relative mt-1 rounded-md shadow-sm">
+              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <span class="text-gray-500 sm:text-sm">Rp</span>
+              </div>
+              <input id="payWithDisc" type="number" onchange="calculate()" value="0" name="price" class="input-price w-full rounded-md border-gray-300 pl-8 pr-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="0.00">
+            </div>
+        </div>
+        <div class="py-2">
+            <button class="rounded px-4 py-2 text-white hover:text-gray-200 bg-green-500 hover:bg-green-600" onclick="addItem()">Add Item</button>
+            <button class="rounded px-4 py-2 text-white hover:text-gray-200 bg-red-500 hover:bg-red-700" onclick="deleteAllItems()">Reset</button>
+        </div>
+        <div id="items">
+            <Table class="table-items">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                        <th>Total Price</th>
+                        <th>Pay per Item</th>
+                        <th>Total After Dis/Tax</th>
+                    </tr>
+                </thead>
+                <tbody id="table-item">
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td></td>
+                        <td class="font-bold">TOTAL</td>
+                        <td></td>
+                        <td></td>
+                        <td><div class="w-1/5 max-w-xs min-w-fit">
+                            <div class="relative mt-1 rounded-md shadow-sm">
+                              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                <span class="text-gray-500 sm:text-sm">Rp</span>
+                              </div>
+                              <input id="totalPrice" type="number" class="input-price rounded-md border-gray-300 pl-8 pr-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" readOnly placeholder="0.00">
+                            </div>
+                        </div>
+                        <td></td>
+                        <td><div class="w-1/5 max-w-xs min-w-fit">
+                            <div class="relative mt-1 rounded-md shadow-sm">
+                              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                <span class="text-gray-500 sm:text-sm">Rp</span>
+                              </div>
+                              <input id="totalAfterDisc" type="number" class="input-price rounded-md border-gray-300 pl-8 pr-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" readOnly placeholder="0.00">
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </Table>
+            
+        </div>
+    </div>
+    
+</body>
+<script>
+    var idx = 0;
+    function addItem() {
+        let table=document.getElementById('table-item');
+        let name = {
+            id: `name${idx}`,
+            index: idx,
+            placeholder: `Item Name`
+        }
+        let unitPrice = {
+            id: `up${idx}`,
+            value: 0,
+            class: "ups",
+            index: idx,
+            onChange: `calculateLine(${idx})`
+        }
+        let qty = {
+            id: `qty${idx}`,
+            value: 0,
+            class: "qtys",
+            index: idx,
+            onChange: `calculateLine(${idx})`
+        }
+        let totalPrice = {
+            id: `totalPrice${idx}`,
+            value: 0,
+            class: "totalPrices",
+            index: idx,
+            isReadOnly: true
+        }
+        let upAfterDsc = {
+            id: `upAfterDsc${idx}`,
+            value: 0,
+            class: "upAfterDisc",
+            index: idx,
+            isReadOnly: true
+        }
+        let totalAfterDsc = {
+            id: `totalAfterDsc${idx}`,
+            value: 0,
+            class: "totalAfterDisc",
+            index: idx,
+            isReadOnly: true
+        }
+        let item = ` <tr id="item${idx}">
+                        <td><i class="fa-solid fa-trash" onclick="deleteItem(this)"></i></td>
+                        <td>${inputText(name)}</td>
+                        <td>${inputPrice(unitPrice)}</td>
+                        <td>${inputNumber(qty)}</td>
+                        <td>${inputPrice(totalPrice)}</td>
+                        <td>${inputPrice(upAfterDsc)}</td>
+                        <td>${inputPrice(totalAfterDsc)}</td>
+                    </tr>`;
+        table.insertAdjacentHTML('beforeend', item);
+        idx++;
+    }
+    
+    function deleteItem(item) {
+        item.parentNode.parentNode.remove();
+        calculate();
+    }
+
+    function deleteAllItems(){
+        let items=document.getElementById('table-item');
+        items.innerHTML = '';
+        setPayWithDiscount(0);
+        setTotalAllPrice(0);
+        setTotalAfterDiscount(0);
+    }
+
+    function calculateLine(idx) {
+        let unitPrice = document.querySelector(`#up${idx}`).value;
+        let qty = getQuantity(idx);
+        
+        setTotalPrice(idx, unitPrice, qty)
+        calculate();
+    }
+
+    function calculate(){
+        let calculatedAllPrice = calculateTotalPrice();
+        setTotalAllPrice(calculatedAllPrice);
+        calculateAfterDiscountWithQuantity()
+        let calculatedAfterDiscount = calculateTotalPriceAfterDisc();
+        setTotalAfterDiscount(calculatedAfterDiscount);
+    }
+
+    function priceWithQuantity(price, quantity){
+        return price * quantity;
+    }
+
+    function calculateTotalPrice() {
+        let totalPrices = document.querySelectorAll(".totalPrices");
+        return [...totalPrices].map(el => Number(el.value))
+                                        .reduce((a, b) => a+b);
+    }
+    
+    function calculateTotalPriceAfterDisc() {
+        let totalPrices = document.querySelectorAll(".totalAfterDisc");
+        return [...totalPrices].map(el => Number(el.value))
+                                        .reduce((a, b) => a+b);
+    }
+
+    function calculateAfterDiscountWithQuantity() {
+        let percentForDsc = getPayWithDiscount() / getAllTotalPrice();
+        document.querySelectorAll('.ups').forEach((el) => {
+            let unitPriceAfterDsc = priceWithQuantity(el.value, percentForDsc)
+            let idx = el.getAttribute('index');
+            setUnitPriceAfterDisc(idx, unitPriceAfterDsc);
+            let qty = getQuantity(idx);
+            setAfterDiscountWithQuantity(idx, priceWithQuantity(unitPriceAfterDsc, qty))
+        });
+    }
+
+    function getQuantity(idx) {
+        return document.querySelector(`#qty${idx}`).value;
+    }
+
+    function getAllTotalPrice(){
+        return document.querySelector('#totalPrice').value;
+    }
+
+    function setTotalAllPrice(price){
+        document.querySelector('#totalPrice').value = price;
+    }
+
+    function setTotalPrice(idx, price, qty){
+        document.querySelector(`#totalPrice${idx}`).value = priceWithQuantity(price, qty);
+    }
+
+    function getPayWithDiscount(){
+        return document.getElementById('payWithDisc').value;
+    }
+
+    function setPayWithDiscount(price) {
+        document.getElementById('payWithDisc').value = 0;
+    }
+
+    function getUnitPriceAfterDisc(idx){
+        return document.querySelector(`#upAfterDsc${idx}`).value
+    }
+
+    function setUnitPriceAfterDisc(idx, price){
+        return document.querySelector(`#upAfterDsc${idx}`).value = price;
+    }
+
+    function setAfterDiscountWithQuantity(idx, price){
+        return document.querySelector(`#totalAfterDsc${idx}`).value = price;
+    }
+
+    function setTotalAfterDiscount(price) {
+        document.querySelector('#totalAfterDisc').value = price;
+    }
+
+    function inputPrice(params){
+        return `<div class="relative mt-1 max-w-xs min-w-fit rounded-md shadow-sm">
+                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                        <span class="text-gray-500 sm:text-sm">Rp</span>
+                    </div>
+                    <input ${params.id ? 'id="'+params.id+'"' : ''} 
+                            type="number" 
+                            min="0"
+                            class="${params.class ? params.class : ''} input-price rounded-md border-gray-300 pl-8 pr-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" 
+                            placeholder="0.00"
+                            ${params.value ? 'value="'+params.value+'"' : 'value="0"'}
+                            ${params.onChange ? 'onChange="'+params.onChange+'"' : ''}
+                            ${params.isReadOnly ? 'readOnly' : ''}
+                            ${params.isDisabled ? 'disabled' : ""} 
+                            ${params.index != null? 'index="'+params.index+'"' : '' }
+                            >
+                </div>`
+    }
+
+    function inputNumber(params){
+        return `<div class="relative mt-1 max-w-xs min-w-fit rounded-md shadow-sm">
+                    <input ${params.id ? 'id="'+params.id+'"' : ''} 
+                            type="number" 
+                            min="0"
+                            class="${params.class ? params.class : ''} input-price rounded-md border-gray-300 pl-8 pr-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" 
+                            placeholder="0.00"
+                            ${params.value ? 'value="'+params.value+'"' : 'value="0"'}
+                            ${params.onChange ? 'onChange="'+params.onChange+'"' : ''}
+                            ${params.isReadOnly ? 'readOnly' : ''}
+                            ${params.isDisabled ? 'disabled' : ""} 
+                            ${params.index != null? 'index="'+params.index+'"' : '' }
+                            >
+                </div>`
+    }
+
+    function inputText(params){
+        return `<div class="relative mt-1 max-w-xs min-w-fit rounded-md shadow-sm">
+                    <input ${params.id ? 'id="'+params.id+'"' : ''} 
+                            type="text" 
+                            class="${params.class ? params.class : ''} rounded-md border-gray-300 pl-2 pr-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" 
+                            ${params.placeholder ? 'placeholder="'+params.placeholder+'"' : ''}
+                            ${params.value ? 'value="'+params.value+'"' : ''}
+                            ${params.onChange ? 'onChange="'+params.onChange+'"' : ''}
+                            ${params.isReadOnly ? 'readOnly' : ''}
+                            ${params.isDisabled ? 'disabled' : ""} 
+                            ${params.index != null? 'index="'+params.index+'"' : '' }
+                            >
+                </div>`
+    }
+</script>
+</html>
