@@ -16,9 +16,9 @@
             <label for="price" class="text-sm font-bold text-gray-700">Total Pay WITH Discount/Tax</label>
             <div class="relative mt-1 rounded-md shadow-sm">
               <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <span class="text-gray-500 sm:text-sm">Rp</span>
+                <span class="text-gray-500 sm:text-xs text-sm">Rp</span>
               </div>
-              <input id="payWithDisc" type="number" onchange="calculate()" value="0" name="price" class="input-price w-full rounded-md border-gray-300 pl-8 pr-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="0.00">
+              <input id="payWithDisc" type="number" onchange="calculate()" value="0" name="price" class="input-price w-full rounded-md border-gray-300 pl-8 pr-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-xs text-sm" placeholder="0.00">
             </div>
         </div>
         <div class="py-2">
@@ -27,7 +27,7 @@
             <button class="rounded px-4 py-2 text-white hover:text-gray-200 bg-red-500 hover:bg-red-700" onclick="deleteAllItems()">Reset</button>
         </div>
         <div id="items">
-            <Table class="table-items">
+            <table class="table-items table-auto">
                 <thead>
                     <tr>
                         <th></th>
@@ -50,18 +50,18 @@
                         <td><div class="w-1/5 max-w-xs">
                             <div class="relative mt-1 rounded-md shadow-sm">
                               <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                <span class="text-gray-500 sm:text-sm">Rp</span>
+                                <span class="text-gray-500 sm:text-xs text-sm">Rp</span>
                               </div>
-                              <input id="totalPrice" type="number" class="input-price rounded-md border-gray-300 pl-8 pr-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" readOnly placeholder="0.00">
+                              <input id="totalPrice" type="number" class="input-price rounded-md border-gray-300 pl-8 pr-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-xs text-sm" readOnly placeholder="0.00">
                             </div>
                         </div>
                         <td></td>
                         <td><div class="w-1/5 max-w-xs">
                             <div class="relative mt-1 rounded-md shadow-sm">
                               <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                <span class="text-gray-500 sm:text-sm">Rp</span>
+                                <span class="text-gray-500 sm:text-xs text-sm">Rp</span>
                               </div>
-                              <input id="totalAfterDisc" type="number" class="input-price rounded-md border-gray-300 pl-8 pr-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" readOnly placeholder="0.00">
+                              <input id="totalAfterDisc" type="number" class="input-price rounded-md border-gray-300 pl-8 pr-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-xs text-sm" readOnly placeholder="0.00">
                             </div>
                         </td>
                     </tr>
@@ -253,12 +253,12 @@
     function inputPrice(params){
         return `<div class="relative mt-1 max-w-xs rounded-md shadow-sm">
                     <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                        <span class="text-gray-500 sm:text-sm">Rp</span>
+                        <span class="text-gray-500 sm:text-xs text-sm">Rp</span>
                     </div>
                     <input ${params.id ? 'id="'+params.id+'"' : ''} 
                             type="number" 
                             min="0"
-                            class="${params.class ? params.class : ''} input-price rounded-md border-gray-300 pl-8 pr-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" 
+                            class="${params.class ? params.class : ''} input-price rounded-md border-gray-300 pl-8 pr-2 focus:border-indigo-500 w-full focus:ring-indigo-500 sm:text-xs text-sm" 
                             placeholder="0.00"
                             ${params.value ? 'value="'+params.value+'"' : 'value="0"'}
                             ${params.onChange ? 'onChange="'+params.onChange+'"' : ''}
@@ -274,7 +274,7 @@
                     <input ${params.id ? 'id="'+params.id+'"' : ''} 
                             type="number" 
                             min="0"
-                            class="${params.class ? params.class : ''} input-price rounded-md border-gray-300 pl-8 pr-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" 
+                            class="${params.class ? params.class : ''} input-price rounded-md border-gray-300 pl-8 pr-2 focus:border-indigo-500 w-full focus:ring-indigo-500 sm:text-xs text-sm" 
                             placeholder="0.00"
                             ${params.value ? 'value="'+params.value+'"' : 'value="0"'}
                             ${params.onChange ? 'onChange="'+params.onChange+'"' : ''}
@@ -289,7 +289,7 @@
         return `<div class="relative mt-1 max-w-xs rounded-md shadow-sm">
                     <input ${params.id ? 'id="'+params.id+'"' : ''} 
                             type="text" 
-                            class="${params.class ? params.class : ''} rounded-md border-gray-300 pl-2 pr-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" 
+                            class="${params.class ? params.class : ''} rounded-md border-gray-300 pl-2 pr-2 focus:border-indigo-500 w-full focus:ring-indigo-500 sm:text-xs text-sm" 
                             ${params.placeholder ? 'placeholder="'+params.placeholder+'"' : ''}
                             ${params.value ? 'value="'+params.value+'"' : ''}
                             ${params.onChange ? 'onChange="'+params.onChange+'"' : ''}
