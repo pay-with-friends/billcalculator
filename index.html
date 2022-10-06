@@ -22,11 +22,7 @@
                 <button class="rounded sm:text-xs text-sm px-4 py-2 text-white hover:text-gray-200 bg-green-500 hover:bg-green-600" onclick="addItem()">Add Item</button>
             </div>
         </div>
-        <div class="py-2">
-            <button class="rounded sm:text-xs text-sm px-4 py-2 text-white hover:text-gray-200 bg-cyan-500 hover:bg-cyan-600" onclick="calculate()">Calculate</button>
-            <button class="rounded sm:text-xs text-sm px-4 py-2 text-white hover:text-gray-200 bg-red-500 hover:bg-red-700" onclick="deleteAllItems()">Reset</button>
-        </div>
-        <div id="items">
+        <div id="items" class="py-2">
             <table class="table-items table-auto">
                 <thead>
                     <tr>
@@ -67,7 +63,10 @@
                     </tr>
                 </tfoot>
             </Table>
-            
+            <div class="py-2 text-right">
+                <button class="rounded sm:text-xs text-sm px-4 py-2 text-white hover:text-gray-200 bg-cyan-500 hover:bg-cyan-600" onclick="calculate()">Calculate</button>
+                <button class="rounded sm:text-xs text-sm px-4 py-2 text-white hover:text-gray-200 bg-red-500 hover:bg-red-700" onclick="deleteAllItems()">Reset</button>
+            </div>
         </div>
     </div>
     
