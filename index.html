@@ -18,7 +18,7 @@
                 <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                     <span class="text-gray-500 sm:text-xs text-sm">Rp</span>
                 </div>
-                <input id="payWithDisc" type="number" onchange="calculate()" value="0" name="price" class="input-price rounded-md min-w-sm border-gray-300 pl-8 pr-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-xs text-sm" placeholder="0.00">
+                <input id="payWithDisc" type="number" onchange="calculate()" name="price" class="input-price rounded-md min-w-sm border-gray-300 pl-8 pr-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-xs text-sm" min="0" placeholder="0.00">
                 <button class="rounded sm:text-xs text-sm px-4 py-2 text-white hover:text-gray-200 bg-green-500 hover:bg-green-600" onclick="addItem()">Add Item</button>
             </div>
         </div>
@@ -48,7 +48,7 @@
                               <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                 <span class="text-gray-500 sm:text-xs text-sm">Rp</span>
                               </div>
-                              <input id="totalPrice" type="number" class="input-price w-full disabled rounded-md border-gray-300 pl-8 pr-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-xs text-sm" readOnly placeholder="0.00">
+                              <input id="totalPrice" type="number" disabled class="input-price w-full rounded-md border-gray-300 pl-8 pr-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-xs text-sm" readOnly placeholder="0.00">
                             </div>
                         </div>
                         <td></td>
@@ -57,7 +57,7 @@
                               <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                 <span class="text-gray-500 sm:text-xs text-sm">Rp</span>
                               </div>
-                              <input id="totalAfterDisc" type="number" class="input-price w-full disabled rounded-md border-gray-300 pl-8 pr-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-xs text-sm" readOnly placeholder="0.00">
+                              <input id="totalAfterDisc" type="number" disabled class="input-price w-full rounded-md border-gray-300 pl-8 pr-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-xs text-sm" readOnly placeholder="0.00">
                             </div>
                         </td>
                     </tr>
@@ -137,7 +137,7 @@
     function deleteAllItems(){
         let items=document.getElementById('table-item');
         items.innerHTML = '';
-        setPayWithDiscount(0);
+        setPayWithDiscount('');
         setTotalAllPrice(0);
         setTotalAfterDiscount(0);
     }
@@ -167,10 +167,14 @@
     }
 
     function priceWithQuantity(price, quantity){
+        if(isNaN(price) || price == '' || isNaN(quantity) || quantity == '') return;
+
         return price * quantity;
     }
 
     function pricePerQuantity(price, quantity){
+        if(isNaN(price) || price == '' || isNaN(quantity) || quantity == '') return;
+
         return price / quantity
     }
 
@@ -206,6 +210,8 @@
     }
 
     function setUnitPrice(idx, price){
+        if(isNaN(price) || price == '') return;
+
         document.querySelector(`#up${idx}`).value = Math.round(price);
     }
 
@@ -214,6 +220,8 @@
     }
 
     function setTotalAllPrice(price){
+        if(isNaN(price) || price == '') return;
+
         document.querySelector('#totalPrice').value = Math.round(price);
     }
 
@@ -222,6 +230,8 @@
     }
 
     function setTotalPrice(idx, price, qty){
+        if(isNaN(price) || isNaN(qty) || price == '' || qty == '') return;
+
         document.querySelector(`#totalPrice${idx}`).value = Math.round(priceWithQuantity(price, qty));
     }
 
@@ -230,7 +240,7 @@
     }
 
     function setPayWithDiscount(price) {
-        document.getElementById('payWithDisc').value = 0;
+        document.getElementById('payWithDisc').value = price;
     }
 
     function getUnitPriceAfterDisc(idx){
@@ -238,14 +248,20 @@
     }
 
     function setUnitPriceAfterDisc(idx, price){
+        if(isNaN(price) || price == '') return;
+
         document.querySelector(`#upAfterDsc${idx}`).value = Math.round(price);
     }
 
     function setAfterDiscountWithQuantity(idx, price){
+        if(isNaN(price) || price == '') return;
+
         document.querySelector(`#totalAfterDsc${idx}`).value = Math.round(price);
     }
 
     function setTotalAfterDiscount(price) {
+        if(isNaN(price) || price == '') return;
+
         document.querySelector('#totalAfterDisc').value = Math.round(price);
     }
 
@@ -259,7 +275,7 @@
                             min="0"
                             class="${params.class ? params.class : ''} input-price rounded-md border-gray-300 pl-8 pr-2 focus:border-indigo-500 w-full focus:ring-indigo-500 sm:text-xs text-sm" 
                             placeholder="0.00"
-                            ${params.value ? 'value="'+params.value+'"' : 'value="0"'}
+                            ${params.value ? 'value="'+params.value+'"' : ''}
                             ${params.onChange ? 'onChange="'+params.onChange+'"' : ''}
                             ${params.isReadOnly ? 'readOnly' : ''}
                             ${params.isDisabled ? 'disabled' : ""} 
@@ -275,7 +291,7 @@
                             min="0"
                             class="${params.class ? params.class : ''} input-price rounded-md border-gray-300 pl-8 pr-2 focus:border-indigo-500 w-full focus:ring-indigo-500 sm:text-xs text-sm" 
                             placeholder="0.00"
-                            ${params.value ? 'value="'+params.value+'"' : 'value="0"'}
+                            ${params.value ? 'value="'+params.value+'"' : ''}
                             ${params.onChange ? 'onChange="'+params.onChange+'"' : ''}
                             ${params.isReadOnly ? 'readOnly' : ''}
                             ${params.isDisabled ? 'disabled' : ""} 
